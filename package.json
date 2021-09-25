@@ -1,0 +1,26 @@
+{
+    "name": "Pokemon Game",
+    "version": "1.0.0",
+    "description": "Pokemon Game",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node index.js"
+    },
+    "keywords": [
+        "pokemon",
+        "game",
+        "heroku"
+    ],
+    "author": "Author",
+    "license": "MIT",
+    "dependencies": {
+        "digest": "^0.0.5",
+        "express": "^4.17.1",
+        "request": "^2.88.2",
+        "socket.io": "^4.2.0"
+    },
+    "engines": {
+        "node": "16.x"
+    }
+}

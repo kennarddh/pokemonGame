@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pokemon</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <ul class="pages">
+        <li class="login page" id="loginPage">
+            <form class="form" id="loginForm">
+                <h3 class="title">What's your nickname?</h3>
+                <input class="usernameInput" id="username" placeholder="Username" type="text" autocomplete="off" />
+                <button class="loginButton">Submit</button>
+            </form>
+        </li>
+        <li class="join page" id="joinPage">
+            <form action="" id="joinForm">
+                <h1 class="title">Join Room</h1>
+                <input type="text" placeholder="Room Name" id="roomName" autocomplete="off">
+                <button class="joinButton">Join</button>
+            </form>
+        </li>
+        <li class="room page" id="roomPage">
+            <div class="inner">
+                <h3 class="title">Start When There Are 2 Players</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
+        </li>
+        <li class="choosePokemon page" id="choosePokemonPage">
+            <h1 class="title">Select Pokemon</h1>
+            <div data-pokemon="" id="cardSource" class="card">
+                <div class="inner">
+                    <div class="frontpage">
+                        <img src="default_pokemon_image.jpg" id="image" class="image" alt="Pokemon Image">
+                        <h3 id="pokemon_name"></h3>
+                    </div>
+                    <div class="backpage">
+                        <div class="stats">
+                            <h4 class="damage">Damage : <span id="damage"></span></h4>
+                            <h4 class="defense">Defense : <span id="defense"></span></h4>
+                            <h4 class="health">Health : <span id="health"></span></h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="wrap" id="cardWrap"></div>
+        </li>
+        <li class="battle page" id="battlePage">
+            <div class="inner">
+                <div class="mine">
+                    <img src="default_pokemon_image.jpg" class="pokemonImage my" id="myImage" alt="Pokemon">
+                    <div class="stats">
+                        <h4 class="meTitle">Me</h4>
+                        <p class="pokemonName" id="myPokemonName">Name</p>
+                        <p class="healthTitle">Health</p>
+                        <progress id="myHealth" class="pokemonHealth" value="100" min="0" max="100"></progress>
+                        <p class="healthText"><span id="myNowHealth">0</span>/<span id="myMaxHealth">0</span></p>
+                    </div>
+                </div>
+                <div class="opponent">
+                    <img src="default_pokemon_image.jpg" class="pokemonImage opponent" id="opponentImage" alt="Pokemon">
+                    <div class="stats">
+                        <p class="pokemonName" id="opponentPokemonName">Name</p>
+                        <p class="healthTitle">Health</p>
+                        <progress id="opponentHealth" class="pokemonHealth" value="100" min="0" max="100"></progress>
+                        <p class="healthText"><span id="opponentNowHealth">0</span>/<span id="opponentMaxHealth">0</span></p>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="abilities" id="abilities"></div>
+                    <div class="action">
+                        <p class="actionText" id="actionText"></p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="complete page" id="completePage">
+            <div class="inner">
+                <h1 id="status" class="status">Win</h1>
+                <button class="playAgainButton" onclick='location.reload()'>Play Again</button>
+            </div>
+        </li>
+    </ul>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/main.js"></script>
+</body>
+</html>
