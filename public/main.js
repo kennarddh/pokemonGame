@@ -219,12 +219,16 @@ socket.on('updateStatus', (send) => {
         battleDataMyNowHealth.innerHTML = data.health
         battleDataMyMaxHealth.innerHTML = data.maxHealth
 
+        battleDataMyHealth.value = (data.health / data.maxHealth) * 100
+
         battleDataPanelActionText.innerHTML = data.msg
     } else {
         const data = Object.values(send)[0]
 
         battleDataOpponentNowHealth.innerHTML = data.health
         battleDataOpponentMaxHealth.innerHTML = data.maxHealth
+
+        battleDataOpponentHealth.value = (data.health / data.maxHealth) * 100
 
         battleDataPanelActionText.innerHTML = data.msg
     }

@@ -219,6 +219,25 @@ io.on('connection', (socket) => {
                 if (io.sockets.sockets.get(target).pokemonHealth <= 0) {
                     io.sockets.sockets.get(target).pokemonHealth = 0
 
+                    const optionsBattleHistory = {
+                        method: 'POST',
+                        json: {
+                            "win_pokemon_id": io.sockets.sockets.get(attack).pokemonId,
+                            "lose_pokemon_id": io.sockets.sockets.get(target).pokemonId,
+                            "winner_health_left": io.sockets.sockets.get(attack).pokemonHealth
+                        },
+                        uri:'http://localhost/ziaul/apici3/api/battle_history_create',
+                        auth: {
+                            user: 'admin',
+                            pass: '1234',
+                            sendImmediately: false
+                        }
+                    }
+
+                    console.log(optionsBattleHistory)
+
+                    request(optionsBattleHistory, (error, response, body) => {})
+
                     io.sockets.to(socket.lastRoom).emit('gameComplete', {win: attack})
                     
                     delete io.sockets.adapter.rooms.get(socket.lastRoom).status
