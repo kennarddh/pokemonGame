@@ -80,6 +80,27 @@ io.on('connection', (socket) => {
         })
     })
 
+    socket.on('getPokemonListSearch', (query) => {
+        const options = {
+            method: 'GET',
+            uri:'http://localhost/ziaul/apici3/api/pokemon/search',
+            qs: {query: query},
+            auth: {
+                user: 'admin',
+                pass: '1234',
+                sendImmediately: false
+            }
+        }
+        
+        request(options, function (error, response) {
+            if (error) throw new Error(error)
+
+            body = JSON.parse(response.body)
+
+            socket.emit('getPokemonListSearch', body)
+        })
+    })
+
     socket.on('choosePokemon', (pokemonId) => {
         socket.pokemonId = pokemonId
 
@@ -107,10 +128,11 @@ io.on('connection', (socket) => {
 
                 const options = {
                     method: 'GET',
-                    uri: `https://pokeapi.co/api/v2/pokemon/${socketClient.pokemonId}`
+                    url: `https://pokeapi.co/api/v2/pokemon/${socketClient.pokemonId}`
                 }
                 
                 request(options, (error, response) => {
+                    if (error) throw new Error(error)
                     const body = JSON.parse(response.body)
 
                     const type = body["types"][0]["type"]

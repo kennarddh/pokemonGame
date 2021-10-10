@@ -20,6 +20,7 @@ const roomPageTbody = roomPage.querySelector("#tbody")
 // choose pokemon page
 const choosePokemonPage = document.querySelector("#choosePokemonPage")
 
+const choosePokemonPageSearchForm = choosePokemonPage.querySelector("#searchForm")
 const choosePokemonPageCardSource = choosePokemonPage.querySelector("#cardSource")
 
 // battle page
@@ -111,6 +112,48 @@ socket.on('getPokemonList', (data) => {
 
         cardWrap.appendChild(clone)
     });
+
+    choosePokemonPageCardSource.remove()
+    
+    const choosePokemonPageCardWrap = choosePokemonPage.querySelectorAll("#cardWrap div")
+
+    choosePokemonPageCardWrap.forEach((element) => {
+        element.addEventListener('click', (event) => {
+            socket.emit('choosePokemon', element.dataset.pokemon)
+        })
+    })
+})
+
+choosePokemonPageSearchForm.addEventListener('submit', (event) => {
+    event.preventDefault()
+    const choosePokemonPageSearchBar = choosePokemonPage.querySelector("#searchBar")
+
+    if (choosePokemonPageSearchBar.value) {
+        socket.emit("getPokemonListSearch", choosePokemonPageSearchBar.value)
+
+        choosePokemonPageSearchBar.value = ''
+    }
+})
+
+socket.on('getPokemonListSearch', (data) => {
+    cardWrap.innerHTML = ''
+
+    data["result"].forEach(row => {
+        let clone = choosePokemonPageCardSource.cloneNode(true)
+
+        clone.id = "card"
+        clone.setAttribute("data-pokemon", row["id"])
+        clone.querySelector("#pokemon_name").innerHTML = row["name"]
+        image = JSON.parse(row["sprites"])["front_default"]
+
+        clone.querySelector("#image").src = JSON.parse(row["sprites"])["front_default"] || JSON.parse(row["sprites"])["other"]["official-artwork"]["front_default"]
+
+        clone.querySelector("#damage").innerHTML = row["damage"]
+        clone.querySelector("#defense").innerHTML = row["defense"]
+        clone.querySelector("#health").innerHTML = row["health"]
+
+        cardWrap.appendChild(clone)
+    })
 
     choosePokemonPageCardSource.remove()
     
