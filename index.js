@@ -7,7 +7,6 @@ const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 const port = process.env.PORT || 3000
 const request = require('request')
-const { Socket } = require('socket.io')
 
 server.listen(port, () => {
     console.log('Server listening at port %d', port)
@@ -103,6 +102,68 @@ io.on('connection', (socket) => {
         })
         
         if (choosePokemonCount == 2) {
+            socketsId.forEach((socketId) => {
+                let socketClient = io.sockets.sockets.get(socketId)
+
+                const options = {
+                    method: 'GET',
+                    uri: `https://pokeapi.co/api/v2/pokemon/${socketClient.pokemonId}`
+                }
+                
+                request(options, (error, response) => {
+                    const body = JSON.parse(response.body)
+
+                    const type = body["types"][0]["type"]
+
+                    io.sockets.sockets.get(socketId).pokemonTypeName = type["name"]
+                    io.sockets.sockets.get(socketId).pokemonTypeUrl = type["url"]
+                })
+            })
+
+            const player1 = io.sockets.sockets.get(socketsId[0])
+            const player2 = io.sockets.sockets.get(socketsId[1])
+
+            player1.pokemonTypeMultiplier = 1
+            player2.pokemonTypeMultiplier = 1
+
+            const options = {
+                method: 'GET',
+                uri: player1.pokemonTypeUrl
+            }
+            
+            request(options, (error, response) => {
+                const body = JSON.parse(response.body)["damage_relations"]["double_damage_to"]
+
+                if (body != []) {
+                    body.forEach((type) => {
+                        typeName = type["name"]
+
+                        if (typeName == player1.pokemonTypeName) {
+                            player1.pokemonTypeMultiplier = 2
+                        }
+                    })
+                }
+            })
+
+            const options2 = {
+                method: 'GET',
+                uri: player2.pokemonTypeUrl
+            }
+            
+            request(options2, (error, response) => {
+                const body = JSON.parse(response.body)["damage_relations"]["double_damage_to"]
+
+                if (body != []) {
+                    body.forEach((type) => {
+                        typeName = type["name"]
+
+                        if (typeName == player2.pokemonTypeName) {
+                            player2.pokemonTypeMultiplier = 2
+                        }
+                    })
+                }
+            })
+            
             io.sockets.in(socket.lastRoom).emit('startBattle', battleData)
         }
     })
@@ -199,7 +260,7 @@ io.on('connection', (socket) => {
             const defense = io.sockets.sockets.get(target).defense
             const damage = io.sockets.sockets.get(attack).damage
 
-            let totalDamage = (damage + bonusDamage) - defense
+            let totalDamage = ((damage * io.sockets.sockets.get(attack).pokemonTypeMultiplier) + bonusDamage) - defense 
 
             const critChance = Math.random() * 100
             
@@ -233,8 +294,6 @@ io.on('connection', (socket) => {
                             sendImmediately: false
                         }
                     }
-
-                    console.log(optionsBattleHistory)
 
                     request(optionsBattleHistory, (error, response, body) => {})
 

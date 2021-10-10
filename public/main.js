@@ -40,6 +40,12 @@ const battleDataOpponentMaxHealth = battlePage.querySelector("#opponentMaxHealth
 const battleDataPanelAbilities = battlePage.querySelector("#abilities")
 const battleDataPanelActionText = battlePage.querySelector("#actionText")
 
+// complete page
+
+const completePage = document.querySelector("#completePage")
+
+const completePageStatus = completePage.querySelector("#status")
+
 loginForm.addEventListener("submit", (event) => {
     event.preventDefault()
     if (loginFormUsername.value) {
@@ -49,12 +55,6 @@ loginForm.addEventListener("submit", (event) => {
         socket.emit("login", loginFormUsername.value)
     }
 })
-
-// complete page
-
-const completePage = document.querySelector("#completePage")
-
-const completePageStatus = completePage.querySelector("#status")
 
 joinForm.addEventListener("submit", (event) => {
     event.preventDefault()
